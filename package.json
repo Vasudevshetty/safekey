@@ -1,6 +1,6 @@
 {
   "name": "@vasudevshetty/safekey",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "🛡️ SafeKey: Secure Secrets Manager CLI - Offline-first, developer-friendly secrets management",
   "type": "module",
   "main": "dist/index.js",

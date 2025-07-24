@@ -1,0 +1,81 @@
+{
+  "name": "@vasudevshetty/safekey",
+  "version": "1.0.0",
+  "description": "🛡️ SafeKey: Secure Secrets Manager CLI - Offline-first, developer-friendly secrets management",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "safekey": "./bin/safekey.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "QUICKSTART.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vasudevshetty/safekey.git"
+  },
+  "homepage": "https://github.com/Vasudevshetty/safekey#readme",
+  "bugs": {
+    "url": "https://github.com/Vasudevshetty/safekey/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ci": "vitest run",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "pkg": "pkg dist/index.js --out-path bin/",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run test:ci && npm run lint && npm run build",
+    "release": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish"
+  },
+  "keywords": [
+    "secrets",
+    "cli",
+    "encryption",
+    "vault",
+    "security",
+    "developer-tools",
+    "aes-256-gcm",
+    "pbkdf2",
+    "offline-first",
+    "typescript"
+  ],
+  "author": {
+    "name": "Vasudev Shetty",
+    "email": "vasudevshetty752@gmail.com",
+    "url": "https://github.com/Vasudevshetty"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "conf": "^12.0.0",
+    "js-yaml": "^4.1.0",
+    "chalk": "^5.3.0",
+    "inquirer": "^9.2.12",
+    "clipboardy": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.4",
+    "@types/js-yaml": "^4.0.9",
+    "@types/inquirer": "^9.0.7",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.54.0",
+    "prettier": "^3.1.0",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.2",
+    "vitest": "^1.0.4",
+    "pkg": "^5.8.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

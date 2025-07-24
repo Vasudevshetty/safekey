@@ -5,6 +5,7 @@
 
 import { promises as fs } from 'fs';
 import path from 'path';
+import { createHash } from 'crypto';
 import {
   CloudProvider,
   SyncResult,
@@ -33,10 +34,11 @@ export class SyncManager {
     credentials: Record<string, string>,
     options: Partial<SyncConfiguration> = {}
   ): Promise<void> {
+    const resolvedVaultPath = this.resolveVaultPath(vaultPath);
     const provider = CloudProviderRegistry.getProvider(providerName);
     await provider.authenticate(credentials);
 
-    const vaultId = this.generateVaultId(vaultPath);
+    const vaultId = this.generateVaultId(resolvedVaultPath);
     const syncConfig: SyncConfiguration = {
       enabled: true,
       provider: providerName,
@@ -47,14 +49,15 @@ export class SyncManager {
       credentials,
     };
 
-    await this.saveSyncConfiguration(vaultPath, syncConfig);
+    await this.saveSyncConfiguration(resolvedVaultPath, syncConfig);
   }
 
   /**
    * Disable sync for a vault
    */
   async disableSync(vaultPath: string): Promise<void> {
-    const configPath = this.getSyncConfigPath(vaultPath);
+    const resolvedVaultPath = this.resolveVaultPath(vaultPath);
+    const configPath = this.getSyncConfigPath(resolvedVaultPath);
     try {
       await fs.unlink(configPath);
     } catch (error) {
@@ -66,7 +69,8 @@ export class SyncManager {
    * Sync a vault with its cloud provider
    */
   async syncVault(vaultPath: string): Promise<SyncResult> {
-    const syncConfig = await this.getSyncConfiguration(vaultPath);
+    const resolvedVaultPath = this.resolveVaultPath(vaultPath);
+    const syncConfig = await this.getSyncConfiguration(resolvedVaultPath);
     if (!syncConfig.enabled) {
       return {
         success: false,
@@ -80,21 +84,25 @@ export class SyncManager {
 
     try {
       // Check if vault exists locally
-      const vaultExists = await this.vaultExists(vaultPath);
+      const vaultExists = await this.vaultExists(resolvedVaultPath);
       if (!vaultExists) {
         // Try to download from cloud
-        return await this.downloadVault(vaultPath, provider, syncConfig);
+        return await this.downloadVault(
+          resolvedVaultPath,
+          provider,
+          syncConfig
+        );
       }
 
       // Check if vault exists in cloud
       const cloudExists = await provider.exists(syncConfig.vaultId);
       if (!cloudExists) {
         // Upload to cloud
-        return await this.uploadVault(vaultPath, provider, syncConfig);
+        return await this.uploadVault(resolvedVaultPath, provider, syncConfig);
       }
 
       // Both exist, check for conflicts
-      return await this.resolveSync(vaultPath, provider, syncConfig);
+      return await this.resolveSync(resolvedVaultPath, provider, syncConfig);
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
       return {
@@ -110,7 +118,8 @@ export class SyncManager {
    */
   async getSyncStatus(vaultPath: string): Promise<SyncStatus> {
     try {
-      const syncConfig = await this.getSyncConfiguration(vaultPath);
+      const resolvedVaultPath = this.resolveVaultPath(vaultPath);
+      const syncConfig = await this.getSyncConfiguration(resolvedVaultPath);
       if (!syncConfig.enabled) {
         return {
           isConfigured: false,
@@ -121,6 +130,20 @@ export class SyncManager {
       }
 
       const provider = CloudProviderRegistry.getProvider(syncConfig.provider);
+
+      // Authenticate the provider to check if it's properly configured
+      try {
+        await provider.authenticate(syncConfig.credentials);
+      } catch (error) {
+        return {
+          isConfigured: false,
+          status: 'error',
+          provider: syncConfig.provider,
+          error: error instanceof Error ? error.message : String(error),
+          conflictCount: 0,
+        };
+      }
+
       const isConfigured = await provider.isConfigured();
 
       if (!isConfigured) {
@@ -134,8 +157,9 @@ export class SyncManager {
       }
 
       // Check for pending changes
-      const lastSyncTime = await this.getLastSyncTime(vaultPath);
-      const vaultModTime = await this.getVaultModificationTime(vaultPath);
+      const lastSyncTime = await this.getLastSyncTime(resolvedVaultPath);
+      const vaultModTime =
+        await this.getVaultModificationTime(resolvedVaultPath);
 
       let status: SyncStatus['status'] = 'synced';
       if (vaultModTime && lastSyncTime && vaultModTime > lastSyncTime) {
@@ -167,17 +191,22 @@ export class SyncManager {
     vaultPath: string,
     resolution: 'local' | 'remote' | 'merge'
   ): Promise<SyncResult> {
-    const syncConfig = await this.getSyncConfiguration(vaultPath);
+    const resolvedVaultPath = this.resolveVaultPath(vaultPath);
+    const syncConfig = await this.getSyncConfiguration(resolvedVaultPath);
     const provider = CloudProviderRegistry.getProvider(syncConfig.provider);
     await provider.authenticate(syncConfig.credentials);
 
     switch (resolution) {
       case 'local':
-        return await this.uploadVault(vaultPath, provider, syncConfig);
+        return await this.uploadVault(resolvedVaultPath, provider, syncConfig);
       case 'remote':
-        return await this.downloadVault(vaultPath, provider, syncConfig);
+        return await this.downloadVault(
+          resolvedVaultPath,
+          provider,
+          syncConfig
+        );
       case 'merge':
-        return await this.mergeVaults(vaultPath, provider, syncConfig);
+        return await this.mergeVaults(resolvedVaultPath, provider, syncConfig);
       default:
         throw new Error(`Unknown resolution: ${resolution}`);
     }
@@ -281,8 +310,7 @@ export class SyncManager {
   ): Promise<VaultMetadata> {
     const stats = await fs.stat(vaultPath);
     const data = await fs.readFile(vaultPath);
-    const crypto = require('crypto');
-    const checksum = crypto.createHash('sha256').update(data).digest('hex');
+    const checksum = createHash('sha256').update(data).digest('hex');
 
     return {
       version: '1.0',
@@ -294,9 +322,7 @@ export class SyncManager {
   }
 
   private generateVaultId(vaultPath: string): string {
-    const crypto = require('crypto');
-    return crypto
-      .createHash('sha256')
+    return createHash('sha256')
       .update(vaultPath)
       .digest('hex')
       .substring(0, 16);
@@ -305,7 +331,13 @@ export class SyncManager {
   private getSyncConfigPath(vaultPath: string): string {
     const vaultDir = path.dirname(vaultPath);
     const vaultName = path.basename(vaultPath, path.extname(vaultPath));
-    return path.join(vaultDir, `.${vaultName}.sync.json`);
+
+    // If vault name already starts with a dot, don't add another one
+    if (vaultName.startsWith('.')) {
+      return path.join(vaultDir, `${vaultName}.sync.json`);
+    } else {
+      return path.join(vaultDir, `.${vaultName}.sync.json`);
+    }
   }
 
   private async saveSyncConfiguration(
@@ -368,5 +400,35 @@ export class SyncManager {
     } catch {
       return undefined;
     }
+  }
+
+  /**
+   * Resolve vault path from profile name or path
+   */
+  private resolveVaultPath(vaultPath: string): string {
+    // If it's "default", resolve to current profile path
+    if (vaultPath === 'default') {
+      const currentProfile = this.config.getCurrentProfile();
+      return currentProfile.vaultPath;
+    }
+
+    // Check if it's a profile name (no path separators and no file extension)
+    if (
+      !vaultPath.includes('/') &&
+      !vaultPath.includes('\\') &&
+      !vaultPath.includes('.')
+    ) {
+      try {
+        const profile = this.config.getProfile(vaultPath);
+        if (profile) {
+          return profile.vaultPath;
+        }
+      } catch {
+        // If profile resolution fails, treat as literal path
+      }
+    }
+
+    // Return as literal path
+    return vaultPath;
   }
 }

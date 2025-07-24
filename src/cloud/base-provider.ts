@@ -10,6 +10,7 @@ import {
   VaultVersion,
   CloudProviderNotConfiguredError,
 } from './types.js';
+import { createHash } from 'crypto';
 
 export abstract class BaseCloudProvider implements CloudProvider {
   protected _isConfigured = false;
@@ -76,8 +77,7 @@ export abstract class BaseCloudProvider implements CloudProvider {
    * Calculate checksum for data integrity
    */
   protected calculateChecksum(data: Buffer): string {
-    const crypto = require('crypto');
-    return crypto.createHash('sha256').update(data).digest('hex');
+    return createHash('sha256').update(data).digest('hex');
   }
 
   /**

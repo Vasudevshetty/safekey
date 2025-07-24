@@ -32,10 +32,7 @@ export interface EncryptedVault {
 }
 
 export class VaultError extends Error {
-  constructor(
-    message: string,
-    public code: string
-  ) {
+  constructor(message: string) {
     super(message);
     this.name = 'VaultError';
   }
@@ -43,24 +40,24 @@ export class VaultError extends Error {
 
 export class VaultNotFoundError extends VaultError {
   constructor(path: string) {
-    super(`Vault not found at ${path}`, 'VAULT_NOT_FOUND');
+    super(`Vault not found at ${path}`);
   }
 }
 
 export class InvalidKeyError extends VaultError {
   constructor() {
-    super('Invalid encryption key or corrupted vault', 'INVALID_KEY');
+    super('Invalid encryption key or corrupted vault');
   }
 }
 
 export class SecretNotFoundError extends VaultError {
   constructor(key: string) {
-    super(`Secret '${key}' not found`, 'SECRET_NOT_FOUND');
+    super(`Secret '${key}' not found`);
   }
 }
 
 export class SecretAlreadyExistsError extends VaultError {
   constructor(key: string) {
-    super(`Secret '${key}' already exists`, 'SECRET_EXISTS');
+    super(`Secret '${key}' already exists`);
   }
 }

@@ -81,7 +81,7 @@ export class Vault {
         secret.updatedAt = new Date(secret.updatedAt);
       });
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      if ((error as any).code === 'ENOENT') {
         throw new VaultNotFoundError(this.filePath);
       }
       throw new InvalidKeyError();

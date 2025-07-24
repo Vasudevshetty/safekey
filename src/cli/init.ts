@@ -3,7 +3,6 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { Vault } from '../core/vault.js';
 import { Config } from '../config/config.js';
-import { VaultNotFoundError, InvalidKeyError } from '../core/types.js';
 
 export interface InitOptions {
   vault?: string;
@@ -66,7 +65,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
       },
     ]);
 
-    const { confirmPassword } = await inquirer.prompt([
+    await inquirer.prompt([
       {
         type: 'password',
         name: 'confirmPassword',

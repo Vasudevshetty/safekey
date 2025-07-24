@@ -1,6 +1,6 @@
 import {
-  createCipher,
-  createDecipher,
+  createCipheriv,
+  createDecipheriv,
   randomBytes,
   pbkdf2Sync,
 } from 'node:crypto';
@@ -47,12 +47,10 @@ export function generateSalt(): string {
 
 /**
  * Encrypts data using AES-256-GCM
- * Note: Using deprecated API for compatibility, should be migrated to CipherGCM in future versions
  */
 export function encrypt(data: string, key: Buffer): EncryptionResult {
   const iv = generateIV();
-  // eslint-disable-next-line node/no-deprecated-api
-  const cipher = createCipher('aes-256-gcm', key);
+  const cipher = createCipheriv('aes-256-gcm', key, iv);
 
   let encrypted = cipher.update(data, 'utf8', 'hex');
   encrypted += cipher.final('hex');
@@ -68,11 +66,10 @@ export function encrypt(data: string, key: Buffer): EncryptionResult {
 
 /**
  * Decrypts data using AES-256-GCM
- * Note: Using deprecated API for compatibility, should be migrated to DecipherGCM in future versions
  */
 export function decrypt(input: DecryptionInput, key: Buffer): string {
-  // eslint-disable-next-line node/no-deprecated-api
-  const decipher = createDecipher('aes-256-gcm', key);
+  const iv = Buffer.from(input.iv, 'hex');
+  const decipher = createDecipheriv('aes-256-gcm', key, iv);
   decipher.setAuthTag(Buffer.from(input.authTag, 'hex'));
 
   let decrypted = decipher.update(input.encrypted, 'hex', 'utf8');

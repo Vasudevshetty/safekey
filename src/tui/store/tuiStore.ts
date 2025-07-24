@@ -33,16 +33,16 @@ export interface TUIState {
   error: string | null;
 
   // Actions
-  setVault: (vault: Vault, path: string) => void;
+  setVault: (_vault: Vault, _path: string) => void;
   loadSecrets: () => Promise<void>;
-  setSelectedSecret: (key: string | null) => void;
-  setCurrentView: (view: TUIState['currentView']) => void;
-  setSearchQuery: (query: string) => void;
-  openModal: (type: TUIState['modalType']) => void;
+  setSelectedSecret: (_key: string | null) => void;
+  setCurrentView: (_view: TUIState['currentView']) => void;
+  setSearchQuery: (_query: string) => void;
+  openModal: (_type: TUIState['modalType']) => void;
   closeModal: () => void;
-  setStatus: (message: string) => void;
-  setError: (error: string | null) => void;
-  setLoading: (loading: boolean) => void;
+  setStatus: (_message: string) => void;
+  setError: (_error: string | null) => void;
+  setLoading: (_loading: boolean) => void;
 }
 
 export const useTUIStore = create<TUIState>((set, get) => ({
@@ -92,10 +92,9 @@ export const useTUIStore = create<TUIState>((set, get) => ({
         filteredSecrets: Object.keys(secretsMap),
         isLoading: false,
       });
-    } catch (error) {
+    } catch (err) {
       set({
-        error:
-          error instanceof Error ? error.message : 'Failed to load secrets',
+        error: err instanceof Error ? err.message : 'Failed to load secrets',
         isLoading: false,
       });
     }

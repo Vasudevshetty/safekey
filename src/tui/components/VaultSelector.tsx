@@ -110,11 +110,21 @@ export function VaultSelector() {
   useInput((input, key) => {
     if (isLoading || showPasswordInput) return;
 
+    // Arrow keys navigation
     if (key.upArrow && selectedIndex > 0) {
       setSelectedIndex(selectedIndex - 1);
     }
 
     if (key.downArrow && selectedIndex < vaults.length - 1) {
+      setSelectedIndex(selectedIndex + 1);
+    }
+
+    // Vim-style navigation
+    if (input === 'k' && selectedIndex > 0) {
+      setSelectedIndex(selectedIndex - 1);
+    }
+
+    if (input === 'j' && selectedIndex < vaults.length - 1) {
       setSelectedIndex(selectedIndex + 1);
     }
 
@@ -142,23 +152,25 @@ export function VaultSelector() {
   }
 
   return (
-    <Box flexDirection="column" padding={2}>
+    <Box flexDirection="column" padding={1}>
       <Box marginBottom={1}>
-        <Text bold>Select a Vault:</Text>
+        <Text bold color="yellow">
+          Select a Vault:
+        </Text>
       </Box>
 
       {vaults.map((vault, index) => (
-        <Box key={vault.name} marginBottom={1}>
+        <Box key={vault.name}>
           <Text color={index === selectedIndex ? 'cyan' : 'white'}>
-            {index === selectedIndex ? '> ' : '  '}
-            {vault.name}
+            {index === selectedIndex ? '▶ ' : '  '}
+            <Text bold={index === selectedIndex}>{vault.name}</Text>
             <Text dimColor> ({vault.path})</Text>
           </Text>
         </Box>
       ))}
 
-      <Box marginTop={2} paddingX={1} borderStyle="round">
-        <Text dimColor>↑/↓ Navigate • Enter Select • Ctrl+C Exit</Text>
+      <Box marginTop={1} paddingX={1} borderStyle="single" borderColor="gray">
+        <Text dimColor>↑/↓ or j/k Navigate • Enter Select • Ctrl+C Exit</Text>
       </Box>
     </Box>
   );

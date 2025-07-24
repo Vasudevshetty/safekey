@@ -12,19 +12,22 @@ import {
   createImportCommand,
 } from './cli/export-import.js';
 import { startTUI } from './tui/index.js';
+import { displayBanner } from './utils/banner.js';
 
 const program = new Command();
 
-// CLI Header
-console.log(chalk.blue.bold('🛡️  SafeKey: Secure Secrets Manager'));
-console.log(
-  chalk.gray('Offline-first, developer-friendly secrets management\n')
-);
+// Show banner only for main CLI (not for subcommands or TUI)
+const shouldShowBanner =
+  !process.argv.includes('tui') && process.argv.length <= 3;
+
+if (shouldShowBanner) {
+  displayBanner(true);
+}
 
 program
   .name('safekey')
   .description('🛡️ SafeKey: Secure Secrets Manager CLI')
-  .version('1.0.0');
+  .version('1.1.0');
 
 // Add commands
 program.addCommand(createInitCommand());

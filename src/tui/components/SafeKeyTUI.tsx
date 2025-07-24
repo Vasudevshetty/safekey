@@ -6,13 +6,14 @@ import { Dashboard } from './Dashboard.js';
 import { SecretsList } from './SecretsList.js';
 import { Settings } from './Settings.js';
 import { StatusBar } from './StatusBar.js';
+import { COMPACT_BANNER } from '../../utils/banner.js';
 
 export function SafeKeyTUI() {
   const { currentView, setStatus } = useTUIStore();
 
   useEffect(() => {
     setStatus(
-      'SafeKey TUI started - Use ↑/↓ to navigate, Enter to select, Ctrl+C to exit'
+      'Use ↑/↓/j/k to navigate, Enter to select, Tab to switch views, Ctrl+C to exit'
     );
   }, [setStatus]);
 
@@ -33,11 +34,9 @@ export function SafeKeyTUI() {
 
   return (
     <Box flexDirection="column" height={process.stdout.rows}>
-      {/* Header */}
-      <Box borderStyle="round" paddingX={1} marginBottom={1}>
-        <Text bold color="cyan">
-          🔐 SafeKey TUI - Secure Secret Management
-        </Text>
+      {/* Compact Banner Header */}
+      <Box marginBottom={1}>
+        <Text color="cyan">{COMPACT_BANNER}</Text>
       </Box>
 
       {/* Main Content */}

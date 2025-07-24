@@ -12,6 +12,7 @@ import {
   createImportCommand,
 } from './cli/export-import.js';
 import { createCloudCommand, createSyncCommand } from './cli/cloud.js';
+import { setupTeamCommands } from './cli/team-commands.js';
 import { startTUI } from './tui/index.js';
 import { displayBanner } from './utils/banner.js';
 
@@ -40,6 +41,9 @@ program.addCommand(createExportCommand());
 program.addCommand(createImportCommand());
 program.addCommand(createCloudCommand());
 program.addCommand(createSyncCommand());
+
+// Setup team commands
+setupTeamCommands(program);
 
 // TUI Command
 program

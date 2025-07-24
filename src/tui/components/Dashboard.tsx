@@ -12,6 +12,8 @@ export function Dashboard() {
       setCurrentView('settings');
     } else if (input === 'v') {
       setCurrentView('vault-selector');
+    } else if (input === 't') {
+      setCurrentView('teams');
     }
   });
 
@@ -55,7 +57,8 @@ export function Dashboard() {
 
       <Box marginTop={1} paddingX={1} borderStyle="single" borderColor="gray">
         <Text dimColor>
-          s Secrets • c Settings • v Switch Vault • j/k or ↑/↓ Navigate
+          s Secrets • t Teams • c Settings • v Switch Vault • j/k or ↑/↓
+          Navigate
         </Text>
       </Box>
     </Box>

@@ -13,7 +13,12 @@ export interface TUIState {
   selectedSecretKey: string | null;
 
   // UI state
-  currentView: 'dashboard' | 'secrets' | 'settings' | 'vault-selector';
+  currentView:
+    | 'dashboard'
+    | 'secrets'
+    | 'settings'
+    | 'vault-selector'
+    | 'teams';
   searchQuery: string;
   filteredSecrets: string[];
 

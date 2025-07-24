@@ -242,6 +242,13 @@ export class Config {
   }
 
   /**
+   * Get the configuration directory
+   */
+  getConfigDir(): string {
+    return join(homedir(), '.safekey');
+  }
+
+  /**
    * Check if this is the first run (no config exists)
    */
   isFirstRun(): boolean {

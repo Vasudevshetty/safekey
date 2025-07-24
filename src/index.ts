@@ -11,6 +11,7 @@ import {
   createExportCommand,
   createImportCommand,
 } from './cli/export-import.js';
+import { createCloudCommand, createSyncCommand } from './cli/cloud.js';
 import { startTUI } from './tui/index.js';
 import { displayBanner } from './utils/banner.js';
 
@@ -37,6 +38,8 @@ program.addCommand(createListCommand());
 program.addCommand(createRemoveCommand());
 program.addCommand(createExportCommand());
 program.addCommand(createImportCommand());
+program.addCommand(createCloudCommand());
+program.addCommand(createSyncCommand());
 
 // TUI Command
 program

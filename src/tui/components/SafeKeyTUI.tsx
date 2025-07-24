@@ -10,13 +10,48 @@ import { StatusBar } from './StatusBar.js';
 import { COMPACT_BANNER } from '../../utils/banner.js';
 
 export function SafeKeyTUI() {
-  const { currentView, setStatus, setError, setCurrentView } = useTUIStore();
+  const {
+    currentView,
+    setStatus,
+    setError,
+    setCurrentView,
+    secrets,
+    selectedSecretKey,
+    vaultPath,
+    setSelectedSecret,
+    filteredSecrets,
+  } = useTUIStore();
 
   useEffect(() => {
     setStatus(
       'Use ↑/↓/j/k to navigate, Enter to select, Tab to switch views, Ctrl+C to exit'
     );
   }, [setStatus]);
+
+  const secretKeys = Object.keys(secrets);
+  const currentIndex = selectedSecretKey
+    ? secretKeys.indexOf(selectedSecretKey)
+    : 0;
+
+  const handleSecretSelect = (secretKey: string) => {
+    setSelectedSecret(secretKey);
+  };
+
+  const handleNavigate = (direction: 'up' | 'down') => {
+    const keys = filteredSecrets.length > 0 ? filteredSecrets : secretKeys;
+    if (keys.length === 0) return;
+
+    const currentIdx = selectedSecretKey ? keys.indexOf(selectedSecretKey) : 0;
+    let newIndex = currentIdx;
+
+    if (direction === 'up') {
+      newIndex = currentIdx > 0 ? currentIdx - 1 : keys.length - 1;
+    } else {
+      newIndex = currentIdx < keys.length - 1 ? currentIdx + 1 : 0;
+    }
+
+    setSelectedSecret(keys[newIndex]);
+  };
 
   const renderCurrentView = () => {
     switch (currentView) {
@@ -25,7 +60,15 @@ export function SafeKeyTUI() {
       case 'dashboard':
         return <Dashboard />;
       case 'secrets':
-        return <SecretsList />;
+        return (
+          <SecretsList
+            secrets={secretKeys}
+            currentIndex={currentIndex}
+            onSelect={handleSecretSelect}
+            onNavigate={handleNavigate}
+            vaultPath={vaultPath}
+          />
+        );
       case 'settings':
         return <Settings />;
       case 'teams':

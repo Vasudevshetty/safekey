@@ -1,7 +1,7 @@
 {
   "name": "@vasudevshetty/safekey",
-  "version": "1.1.0",
-  "description": "🛡️ SafeKey: Secure Secrets Manager CLI - Offline-first, developer-friendly secrets management",
+  "version": "1.2.0",
+  "description": "🛡️ SafeKey: Secure Secrets Manager CLI - Offline-first, developer-friendly secrets management with team collaboration and cloud sync",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -46,7 +46,13 @@
     "aes-256-gcm",
     "pbkdf2",
     "offline-first",
-    "typescript"
+    "typescript",
+    "team-collaboration",
+    "cloud-sync",
+    "github-gist",
+    "aws-s3",
+    "azure-blob",
+    "tui"
   ],
   "author": {
     "name": "Vasudev Shetty",

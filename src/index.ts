@@ -29,7 +29,7 @@ if (shouldShowBanner) {
 program
   .name('safekey')
   .description('🛡️ SafeKey: Secure Secrets Manager CLI')
-  .version('1.1.0');
+  .version('1.2.0');
 
 // Add commands
 program.addCommand(createInitCommand());

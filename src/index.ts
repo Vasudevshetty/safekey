@@ -11,6 +11,7 @@ import {
   createExportCommand,
   createImportCommand,
 } from './cli/export-import.js';
+import { startTUI } from './tui/index.js';
 
 const program = new Command();
 
@@ -33,6 +34,15 @@ program.addCommand(createListCommand());
 program.addCommand(createRemoveCommand());
 program.addCommand(createExportCommand());
 program.addCommand(createImportCommand());
+
+// TUI Command
+program
+  .command('tui')
+  .description('🎨 Start the Terminal User Interface (TUI)')
+  .action(() => {
+    console.clear();
+    startTUI();
+  });
 
 // Global error handler
 process.on('uncaughtException', (error) => {

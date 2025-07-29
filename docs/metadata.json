@@ -1,0 +1,203 @@
+{
+  "metadata": {
+    "title": "SafeKey Documentation",
+    "description": "Comprehensive documentation for SafeKey - Secure Secrets Manager CLI",
+    "version": "1.2.1",
+    "lastUpdated": "2025-01-29",
+    "author": "Vasudev Shetty",
+    "repository": "https://github.com/Vasudevshetty/safekey",
+    "homepage": "https://safekey.dev"
+  },
+  "navigation": [
+    {
+      "id": "getting-started",
+      "title": "Getting Started",
+      "order": 1,
+      "sections": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "file": "introduction.md",
+          "order": 1
+        },
+        {
+          "id": "installation",
+          "title": "Installation",
+          "file": "installation.md",
+          "order": 2
+        },
+        {
+          "id": "quick-start",
+          "title": "Quick Start",
+          "file": "quick-start.md",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "id": "core-concepts",
+      "title": "Core Concepts",
+      "order": 2,
+      "sections": [
+        {
+          "id": "vaults",
+          "title": "Vaults",
+          "file": "vaults.md",
+          "order": 1
+        },
+        {
+          "id": "encryption",
+          "title": "Encryption",
+          "file": "encryption.md",
+          "order": 2
+        },
+        {
+          "id": "security",
+          "title": "Security Model",
+          "file": "security.md",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "id": "cli-reference",
+      "title": "CLI Reference",
+      "order": 3,
+      "sections": [
+        {
+          "id": "basic-commands",
+          "title": "Basic Commands",
+          "file": "basic-commands.md",
+          "order": 1
+        },
+        {
+          "id": "vault-management",
+          "title": "Vault Management",
+          "file": "vault-management.md",
+          "order": 2
+        },
+        {
+          "id": "team-commands",
+          "title": "Team Commands",
+          "file": "team-commands.md",
+          "order": 3
+        },
+        {
+          "id": "cloud-sync",
+          "title": "Cloud Sync",
+          "file": "cloud-sync.md",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "title": "Advanced Usage",
+      "order": 4,
+      "sections": [
+        {
+          "id": "configuration",
+          "title": "Configuration",
+          "file": "configuration.md",
+          "order": 1
+        },
+        {
+          "id": "automation",
+          "title": "Automation & Scripting",
+          "file": "automation.md",
+          "order": 2
+        },
+        {
+          "id": "integrations",
+          "title": "Integrations",
+          "file": "integrations.md",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "title": "API Reference",
+      "order": 5,
+      "sections": [
+        {
+          "id": "typescript-api",
+          "title": "TypeScript API",
+          "file": "typescript-api.md",
+          "order": 1
+        },
+        {
+          "id": "core-classes",
+          "title": "Core Classes",
+          "file": "core-classes.md",
+          "order": 2
+        },
+        {
+          "id": "utilities",
+          "title": "Utilities",
+          "file": "utilities.md",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "id": "guides",
+      "title": "Guides & Tutorials",
+      "order": 6,
+      "sections": [
+        {
+          "id": "team-setup",
+          "title": "Setting Up Team Vaults",
+          "file": "team-setup.md",
+          "order": 1
+        },
+        {
+          "id": "cloud-setup",
+          "title": "Cloud Sync Setup",
+          "file": "cloud-setup.md",
+          "order": 2
+        },
+        {
+          "id": "migration",
+          "title": "Migration Guide",
+          "file": "migration.md",
+          "order": 3
+        }
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Troubleshooting",
+      "order": 7,
+      "sections": [
+        {
+          "id": "common-issues",
+          "title": "Common Issues",
+          "file": "common-issues.md",
+          "order": 1
+        },
+        {
+          "id": "debugging",
+          "title": "Debugging",
+          "file": "debugging.md",
+          "order": 2
+        },
+        {
+          "id": "faq",
+          "title": "FAQ",
+          "file": "faq.md",
+          "order": 3
+        }
+      ]
+    }
+  ],
+  "search": {
+    "enabled": true,
+    "indexFields": ["title", "content", "tags"],
+    "boost": {
+      "title": 3,
+      "headings": 2,
+      "content": 1
+    }
+  }
+}

@@ -66,10 +66,14 @@
     "clipboardy": "^4.0.0",
     "commander": "^11.1.0",
     "conf": "^12.0.0",
+    "gray-matter": "^4.0.3",
     "ink": "^6.0.1",
     "inquirer": "^9.2.12",
     "js-yaml": "^4.1.0",
     "react": "^19.1.0",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-html": "^16.0.1",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
